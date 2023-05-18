@@ -123,4 +123,26 @@ public class Books implements Serializable {
                 ", autor='" + autor + '\'' +
                 '}';
     }
+    public Object buscarPorId(int id) {
+        try {
+            FileInputStream file = new FileInputStream("src/arquivos/biblioteca.txt"+id);
+            ObjectInputStream stream = new ObjectInputStream(file);
+            Object obj = stream.readObject();
+            stream.close();
+            file.close();
+            return obj;
+        } catch (Exception erro) {
+            System.out.println("Falha na leitura \nErro: " + erro);
+            return null;
+        }
+    }
+
+    public void booksDisponiveis(){
+        for(int i = 0 ; i < 3; i++ ){
+            Books leia = new Books();
+            leia.buscarPorId(i);
+
+        }
+    }
+
 }

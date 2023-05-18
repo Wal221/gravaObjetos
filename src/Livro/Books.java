@@ -12,7 +12,7 @@ public class Books implements Serializable {
     private String autor;
 
 
-    public Books (){
+    public Books() {
 
     }
 
@@ -45,20 +45,25 @@ public class Books implements Serializable {
     public void setAutor(String autor) {
         this.autor = autor;
     }
-    public void grava(){
-        try{
-            ObjectOutput objectOutput = new ObjectOutputStream(new FileOutputStream("src/arquivos/biblioteca.txt",true));
-            objectOutput.writeObject(this );
-            System.out.println("Livro gravado");
-            objectOutput.close();
+
+    public void gravar() throws IOException {
+        List <Books> livr = new ArrayList();
+        livr.add(this);
+        try(ObjectOutput objectOutput = new ObjectOutputStream(
+                new FileOutputStream("src/arquivos/biblioteca.txt"))){
+
+            for(Books livro: livr){
+                objectOutput.writeObject(livro );
+                System.out.println("Livro gravado");
+            }
 
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Erro ao salva arquivo!!");
 
         }
-
     }
-    public void ler(){
+
+    public void ler() {
         try {
             ObjectInputStream objectInput = new ObjectInputStream(new FileInputStream("src/arquivos/biblioteca.txt"));
 
@@ -84,5 +89,38 @@ public class Books implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void livrosDisponiveis() throws ClassNotFoundException, FileNotFoundException, IOException {
+        List<Books> books = new ArrayList<>();
+        boolean endOfFile = false;
+
+        try (ObjectInputStream objectInput = new ObjectInputStream(new FileInputStream("src/arquivos/biblioteca.txt"));
+        ) {
+
+            while (true ) {
+                System.out.println(books);
+                books.add((Books) objectInput.readObject());
+
+
+            }
+
+        }  catch(EOFException ex){
+
+        }
+        catch (ClassNotFoundException e) {
+            endOfFile = true;
+            e.printStackTrace();
+
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Books{" +
+                "titulo='" + titulo + '\'' +
+                ", numPag=" + numPag +
+                ", autor='" + autor + '\'' +
+                '}';
     }
 }
